@@ -39,12 +39,23 @@ button {
   font: 400 1rem 'Inter', sans-serif;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--heading);
+  font-weight: bold;
+}
+
 button {
   cursor: pointer;
 }
 
 a {
-  color: inherit;
+  color: var(--highlight);
   text-decoration: none;
   cursor: pointer;
+  font-weight: 600;
 }
