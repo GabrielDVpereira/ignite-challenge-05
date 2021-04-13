@@ -1,1 +1,32 @@
 // TODO
+.post {
+  margin-bottom: 3rem;
+
+  h2 {
+    cursor: pointer;
+  }
+
+  h2:hover {
+    color: var(--highlight);
+  }
+
+  p {
+    margin-top: 0.5rem;
+  }
+
+  p + div {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    div {
+      display: inherit;
+      align-items: center;
+      margin-right: 1rem;
+      svg {
+        font-size: 15px;
+        margin-right: 0.2rem;
+      }
+    }
+  }
+}
