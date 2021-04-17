@@ -1,64 +1,53 @@
+import Head from 'next/head';
+
 import { GetStaticProps } from 'next';
 import { AiOutlineCalendar, AiOutlineUser } from 'react-icons/ai';
 import Header from '../components/Header';
 
-import { getPrismicClient } from '../services/prismic';
-
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
-
-interface Post {
-  uid?: string;
-  first_publication_date: string | null;
-  data: {
-    title: string;
-    subtitle: string;
-    author: string;
-  };
-}
-
-interface PostPagination {
-  next_page: string;
-  results: Post[];
-}
+import { PostPagination, getPostsByPage } from '../services/postsService';
+import { formatDate } from '../../utils/formating';
 
 interface HomeProps {
   postsPagination: PostPagination;
 }
 
-export default function Home(): JSX.Element {
+export default function Home({ postsPagination }: HomeProps): JSX.Element {
   return (
-    <div className={commonStyles.container}>
-      <Header />
-      {[1, 2, 3, 4, 5, 6].map((_, i) => (
-        <div className={styles.post}>
-          <h2>Como utilizar Hooks</h2>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime eius
-            deserunt placeat nulla vitae, quis ipsam ea animi sunt eaque!
-          </p>
+    <>
+      <Head>
+        <title>Space Travelling | Home</title>
+      </Head>
+      <div className={commonStyles.container}>
+        <Header />
+        {postsPagination.results.map((post, i) => (
+          <div className={styles.post} key={post.uid}>
+            <h2>{post.data.title}</h2>
+            <p>{post.data.subtitle}</p>
 
-          <div>
             <div>
-              <AiOutlineCalendar />
-              <time>15 mar 2021</time>
-            </div>
-            <div>
-              <AiOutlineUser />
-              <span>Joseph Oliveira</span>
+              <div>
+                <AiOutlineCalendar />
+                <time>{formatDate(post.first_publication_date)}</time>
+              </div>
+              <div>
+                <AiOutlineUser />
+                <span>{post.data.author}</span>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
 
-      <a>Carregar mais posts</a>
-    </div>
+        {postsPagination.next_page && <a>Carregar mais posts</a>}
+      </div>
+    </>
   );
 }
 
-// export const getStaticProps = async () => {
-//   // const prismic = getPrismicClient();
-//   // const postsResponse = await prismic.query(TODO);
-
-//   // TODO
-// };
+export const getStaticProps: GetStaticProps = async () => {
+  const postsResponse = await getPostsByPage(1);
+  return {
+    props: { postsPagination: postsResponse },
+  };
+};
