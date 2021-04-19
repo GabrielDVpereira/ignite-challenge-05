@@ -28,14 +28,14 @@ function formatPosts(posts): Post[] {
   }));
 }
 
-export async function getPostsByPage(page: number): Promise<PostPagination> {
+export async function getPostsByPage(page?: number): Promise<PostPagination> {
   const prismic = getPrismicClient();
   const postsResponse = await prismic.query(
     [Prismic.predicates.at('document.type', 'posts')],
     {
       fetch: ['posts.title', 'posts.author', 'posts.subtitle'],
       page,
-      pageSize: 100,
+      pageSize: 5,
     }
   );
 
