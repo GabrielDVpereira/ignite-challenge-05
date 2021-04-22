@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { GetStaticPaths, GetStaticProps } from 'next';
-
+import { useRouter } from 'next/router';
 import {
   AiOutlineCalendar,
   AiOutlineUser,
   AiOutlineClockCircle,
 } from 'react-icons/ai';
+
+import { Loading } from '../../components/Loading';
 import { formatDate } from '../../../utils/formating';
-import { getPostByUid, Post } from '../../services/postService';
+import { getPostByUid, getPaths, Post } from '../../services/postService';
 
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
@@ -20,6 +22,8 @@ export interface PostProps {
 const WORDS_PER_MINUTE = 200;
 
 export default function PostPage({ post }: PostProps) {
+  const router = useRouter();
+
   const getTotalLengthBody = (body: { text: string }[]): number => {
     return body.reduce((total, { text }) => {
       return total + text.split(' ').length;
@@ -38,8 +42,12 @@ export default function PostPage({ post }: PostProps) {
     return Math.ceil(totalWords / WORDS_PER_MINUTE);
   };
 
+  if (router.isFallback) {
+    return <Loading />;
+  }
+
   return (
-    <>
+    <div className={styles.conatinerAnimated}>
       <img className={styles.banner} src={post.data.banner.url} alt="banner" />
       <div className={commonStyles.container}>
         <div className={styles.post}>
@@ -69,17 +77,15 @@ export default function PostPage({ post }: PostProps) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // const prismic = getPrismicClient();
-  // const posts = await prismic.query(TODO);
-
+  const response = await getPaths();
   return {
-    paths: [],
-    fallback: 'blocking',
+    paths: response.paths,
+    fallback: true,
   };
 
   // TODO
