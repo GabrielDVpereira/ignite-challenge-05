@@ -6,6 +6,7 @@ import { GetStaticProps } from 'next';
 import { AiOutlineCalendar, AiOutlineUser } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
+import { Header } from '../components/Header';
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
 import { PostPagination, Post, getPostsByPage } from '../services/postsService';
@@ -32,7 +33,6 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
       );
       if (response.ok) {
         const responseJson: PostPagination = await response.json();
-
         setNextPage(prevState => {
           if (responseJson.next_page) {
             return prevState + 1;
@@ -51,6 +51,8 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
       <Head>
         <title>Space Travelling | Home</title>
       </Head>
+
+      <Header />
       <div className={commonStyles.container}>
         {posts.map(post => (
           <div className={styles.post} key={post.uid}>

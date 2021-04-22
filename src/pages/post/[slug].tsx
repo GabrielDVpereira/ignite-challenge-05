@@ -7,6 +7,9 @@ import {
   AiOutlineUser,
   AiOutlineClockCircle,
 } from 'react-icons/ai';
+import Head from 'next/head';
+
+import { Header } from '../../components/Header';
 
 import { Loading } from '../../components/Loading';
 import { formatDate } from '../../../utils/formating';
@@ -47,37 +50,47 @@ export default function PostPage({ post }: PostProps) {
   }
 
   return (
-    <div className={styles.conatinerAnimated}>
-      <img className={styles.banner} src={post.data.banner.url} alt="banner" />
-      <div className={commonStyles.container}>
-        <div className={styles.post}>
-          <h1>{post.data.title}</h1>
-          <div className={styles.postInfo}>
-            <span>
-              <AiOutlineCalendar /> {formatDate(post.first_publication_date)}
-            </span>
-            <span>
-              <AiOutlineUser /> {post.data.author}
-            </span>
-            <span>
-              <AiOutlineClockCircle />
-              {calculateTimeReading()} min
-            </span>
-          </div>
+    <>
+      <Head>
+        <title>Space Travelling | {post.data.title}</title>
+      </Head>
+      <div className={styles.conatinerAnimated}>
+        <Header />
+        <img
+          className={styles.banner}
+          src={post.data.banner.url}
+          alt="banner"
+        />
+        <div className={commonStyles.container}>
+          <div className={styles.post}>
+            <h1>{post.data.title}</h1>
+            <div className={styles.postInfo}>
+              <span>
+                <AiOutlineCalendar /> {formatDate(post.first_publication_date)}
+              </span>
+              <span>
+                <AiOutlineUser /> {post.data.author}
+              </span>
+              <span>
+                <AiOutlineClockCircle />
+                {calculateTimeReading()} min
+              </span>
+            </div>
 
-          <div className={styles.postContent}>
-            {post.data.content.map(section => (
-              <div key={section.heading}>
-                <h2>{section.heading}</h2>
-                {section.body.map(paragraph => (
-                  <p>{paragraph.text}</p>
-                ))}
-              </div>
-            ))}
+            <div className={styles.postContent}>
+              {post.data.content.map(section => (
+                <div key={Math.random()}>
+                  <h2>{section.heading}</h2>
+                  {section.body.map(paragraph => (
+                    <p key={Math.random()}>{paragraph.text}</p>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -97,8 +110,6 @@ export const getStaticProps: GetStaticProps = async context => {
   } = context;
 
   const post = await getPostByUid(String(slug));
-
-  // // TODO
 
   return {
     props: { post },
