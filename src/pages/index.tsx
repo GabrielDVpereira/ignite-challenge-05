@@ -31,16 +31,14 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/posts?page=${nextPage}`
       );
-      if (response.ok) {
-        const responseJson: PostPagination = await response.json();
-        setNextPage(prevState => {
-          if (responseJson.next_page) {
-            return prevState + 1;
-          }
-          return null;
-        });
-        setPosts(prevState => [...prevState, ...responseJson.results]);
-      }
+      const responseJson: PostPagination = await response.json();
+      setNextPage(prevState => {
+        if (responseJson.next_page) {
+          return prevState + 1;
+        }
+        return null;
+      });
+      setPosts(prevState => [...prevState, ...responseJson.results]);
     } catch (err) {
       console.log(err);
       toast.error('Error to get more posts');

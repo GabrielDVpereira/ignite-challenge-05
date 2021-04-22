@@ -100,8 +100,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
     paths: response.paths,
     fallback: true,
   };
-
-  // TODO
 };
 
 export const getStaticProps: GetStaticProps = async context => {
