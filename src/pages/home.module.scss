@@ -1,4 +1,8 @@
 // TODO
+
+.post:first-child {
+  margin-top: 1.5rem;
+}
 .post {
   margin-bottom: 3rem;
 
@@ -37,4 +41,5 @@
   text-decoration: none;
   border: none;
   font-weight: 600;
+  margin-bottom: 2rem;
 }
