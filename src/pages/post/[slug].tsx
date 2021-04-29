@@ -17,6 +17,7 @@ import { getPostByUid, getPaths, Post } from '../../services/postService';
 
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
+import { CommentsSection } from '../../components/CommentsSection';
 
 export interface PostProps {
   post: Post;
@@ -89,6 +90,7 @@ export default function PostPage({ post }: PostProps) {
             </div>
           </div>
         </div>
+        <CommentsSection />
       </div>
     </>
   );
