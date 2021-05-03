@@ -8,6 +8,7 @@ import {
   AiOutlineClockCircle,
 } from 'react-icons/ai';
 import Head from 'next/head';
+import Link from 'next/link';
 
 import { Header } from '../../components/Header';
 
@@ -21,11 +22,12 @@ import { CommentsSection } from '../../components/CommentsSection';
 
 export interface PostProps {
   post: Post;
+  preview?: boolean;
 }
 
 const WORDS_PER_MINUTE = 200;
 
-export default function PostPage({ post }: PostProps) {
+export default function PostPage({ post, preview }: PostProps) {
   const router = useRouter();
 
   const getTotalLengthBody = (body: { text: string }[]): number => {
@@ -89,8 +91,16 @@ export default function PostPage({ post }: PostProps) {
               ))}
             </div>
           </div>
+          <CommentsSection />
+
+          {preview && (
+            <aside className={styles.preview}>
+              <Link href="/api/exit-preview">
+                <a>Sair do modo Preview</a>
+              </Link>
+            </aside>
+          )}
         </div>
-        <CommentsSection />
       </div>
     </>
   );
@@ -107,11 +117,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async context => {
   const {
     params: { slug },
+    preview = false,
+    previewData,
   } = context;
 
-  const post = await getPostByUid(String(slug));
+  const post = await getPostByUid(String(slug), previewData?.ref ?? null);
 
   return {
-    props: { post },
+    props: { post, preview },
   };
 };

@@ -4,6 +4,25 @@
   height: 60vh;
   object-fit: cover;
 }
+.preview {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+  a {
+    padding: 1rem;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    border-radius: 5px;
+    background-color: #fff;
+    width: 90%;
+    color: #000;
+    transition: 0.2s;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
 
 .post {
   padding: 3rem 0;

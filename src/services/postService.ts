@@ -35,8 +35,11 @@ export async function getPaths(): Promise<StaticPostPaths> {
   };
 }
 
-export async function getPostByUid(slug: string): Promise<Post> {
+export async function getPostByUid(
+  slug: string,
+  ref?: string | null
+): Promise<Post> {
   const prismic = getPrismicClient();
-  const response = await prismic.getByUID('posts', slug, {});
+  const response = await prismic.getByUID('posts', slug, { ref });
   return response;
 }

@@ -9,14 +9,23 @@ import Link from 'next/link';
 import { Header } from '../components/Header';
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
-import { PostPagination, Post, getPostsByPage } from '../services/postsService';
+import {
+  PostPagination,
+  Post,
+  getPostsByPage,
+  getPostPreviewByRef,
+} from '../services/postsService';
 import { formatDate } from '../../utils/formating';
 
 interface HomeProps {
   postsPagination: PostPagination;
+  preview?: boolean;
 }
 
-export default function Home({ postsPagination }: HomeProps): JSX.Element {
+export default function Home({
+  postsPagination,
+  preview,
+}: HomeProps): JSX.Element {
   const [nextPage, setNextPage] = useState<number | null>(() => {
     if (postsPagination.next_page) {
       return 2;
@@ -69,27 +78,43 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
                 <span>{post.data.author}</span>
               </div>
             </div>
+
+            {postsPagination.next_page && (
+              <button
+                className={styles.loadButton}
+                type="button"
+                onClick={loadMorePosts}
+              >
+                Carregar mais posts
+              </button>
+            )}
+
+            {preview && (
+              <aside className={styles.preview}>
+                <Link href="/api/exit-preview">
+                  <a>Sair do modo Preview</a>
+                </Link>
+              </aside>
+            )}
           </div>
         ))}
-
-        {postsPagination.next_page && (
-          <button
-            className={styles.loadButton}
-            type="button"
-            onClick={loadMorePosts}
-          >
-            Carregar mais posts
-          </button>
-        )}
       </div>
     </>
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const postsResponse = await getPostsByPage();
+export const getStaticProps: GetStaticProps<HomeProps> = async ({
+  preview = false,
+  previewData,
+}) => {
+  let postsResponse;
+  if (preview) {
+    postsResponse = await getPostPreviewByRef(previewData.ref);
+  } else {
+    postsResponse = await getPostsByPage();
+  }
   return {
-    props: { postsPagination: postsResponse },
+    props: { postsPagination: postsResponse, preview },
     revalidate: 60 * 10, // 10 min
   };
 };

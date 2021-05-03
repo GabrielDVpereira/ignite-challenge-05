@@ -46,3 +46,24 @@ export async function getPostsByPage(page?: number): Promise<PostPagination> {
     results: postsFormated,
   };
 }
+
+export async function getPostPreviewByRef(
+  ref: string
+): Promise<PostPagination> {
+  const prismic = getPrismicClient();
+  const postsResponse = await prismic.query(
+    [Prismic.predicates.at('document.type', 'posts')],
+    {
+      fetch: ['posts.title', 'posts.author', 'posts.subtitle'],
+      ref,
+      pageSize: 5,
+    }
+  );
+
+  const postsFormated = formatPosts(postsResponse.results);
+
+  return {
+    next_page: postsResponse.next_page,
+    results: postsFormated,
+  };
+}
