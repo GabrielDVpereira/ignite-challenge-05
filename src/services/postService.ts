@@ -4,6 +4,14 @@ import { getPrismicClient } from './prismic';
 
 export interface Post {
   first_publication_date: string | null;
+  previus: {
+    title: string;
+    slug: string;
+  };
+  next: {
+    title: string;
+    slug: string;
+  };
   data: {
     title: string;
     banner: {
@@ -41,5 +49,33 @@ export async function getPostByUid(
 ): Promise<Post> {
   const prismic = getPrismicClient();
   const response = await prismic.getByUID('posts', slug, { ref });
-  return response;
+
+  const prevPost = await prismic.query(
+    [Prismic.predicates.at('document.type', 'posts')],
+    {
+      after: response.id,
+      orderings: '[my.post.date desc]',
+      pageSize: 1,
+    }
+  );
+
+  const nextPost = await prismic.query(
+    [Prismic.predicates.at('document.type', 'posts')],
+    {
+      after: response.id,
+      orderings: '[my.post.date desc]',
+      pageSize: 1,
+    }
+  );
+
+  const previus = {
+    title: prevPost?.results[0]?.data.title,
+    slug: prevPost?.results[0]?.uid,
+  };
+  const next = {
+    title: nextPost?.results[0]?.data.title,
+    slug: nextPost?.results[0]?.uid,
+  };
+
+  return { ...response, previus, next };
 }

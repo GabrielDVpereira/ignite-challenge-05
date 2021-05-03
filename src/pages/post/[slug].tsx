@@ -91,6 +91,23 @@ export default function PostPage({ post, preview }: PostProps) {
               ))}
             </div>
           </div>
+
+          <div className={styles.navigationSection}>
+            <div>
+              <span>{post.previus.title}</span>
+              <Link href={`/post/${post.previus.slug}`}>
+                <a>Post anterior</a>
+              </Link>
+            </div>
+
+            <div>
+              <span>{post.next.title}</span>
+              <Link href={`/post/${post.next.slug}`}>
+                <a>Próximo post</a>
+              </Link>
+            </div>
+          </div>
+
           <CommentsSection />
 
           {preview && (
