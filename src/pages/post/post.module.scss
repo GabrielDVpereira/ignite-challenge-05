@@ -78,6 +78,10 @@
   }
 }
 
+.edited {
+  line-height: 3rem;
+}
+
 @media (max-width: 768px) {
   .postInfo {
     flex-direction: column;

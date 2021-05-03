@@ -4,6 +4,8 @@ import { getPrismicClient } from './prismic';
 
 export interface Post {
   first_publication_date: string | null;
+  last_publication_date: string | null;
+  edited: boolean;
   previus: {
     title: string;
     slug: string;
@@ -50,6 +52,8 @@ export async function getPostByUid(
   const prismic = getPrismicClient();
   const response = await prismic.getByUID('posts', slug, { ref });
 
+  console.log(response);
+
   const prevPost = await prismic.query(
     [Prismic.predicates.at('document.type', 'posts')],
     {
@@ -68,6 +72,9 @@ export async function getPostByUid(
     }
   );
 
+  const edited =
+    response.first_publication_date !== response.last_publication_date;
+
   const previus = {
     title: prevPost?.results[0]?.data.title,
     slug: prevPost?.results[0]?.uid,
@@ -77,5 +84,5 @@ export async function getPostByUid(
     slug: nextPost?.results[0]?.uid,
   };
 
-  return { ...response, previus, next };
+  return { ...response, edited, previus, next };
 }

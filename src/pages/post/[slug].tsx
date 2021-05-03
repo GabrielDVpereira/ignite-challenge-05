@@ -80,6 +80,15 @@ export default function PostPage({ post, preview }: PostProps) {
               </span>
             </div>
 
+            {post.edited && (
+              <span className={styles.edited}>
+                {formatDate(
+                  post.last_publication_date,
+                  "'*editado em 'dd LLL yyyy ', às 'p"
+                )}
+              </span>
+            )}
+
             <div className={styles.postContent}>
               {post.data.content.map(section => (
                 <div key={Math.random()}>
