@@ -34,6 +34,7 @@ export async function getPostsByPage(page?: number): Promise<PostPagination> {
     [Prismic.predicates.at('document.type', 'posts')],
     {
       fetch: ['posts.title', 'posts.author', 'posts.subtitle'],
+      orderings: '[document.first_publication_date desc]',
       page,
       pageSize: 5,
     }

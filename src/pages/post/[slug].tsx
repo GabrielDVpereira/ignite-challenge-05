@@ -48,6 +48,8 @@ export default function PostPage({ post, preview }: PostProps) {
     return Math.ceil(totalWords / WORDS_PER_MINUTE);
   };
 
+  console.log(router.isFallback);
+
   if (router.isFallback) {
     return <Loading />;
   }
@@ -102,19 +104,23 @@ export default function PostPage({ post, preview }: PostProps) {
           </div>
 
           <div className={styles.navigationSection}>
-            <div>
-              <span>{post.previus.title}</span>
-              <Link href={`/post/${post.previus.slug}`}>
-                <a>Post anterior</a>
-              </Link>
-            </div>
+            {post.previus && (
+              <div>
+                <span>{post.previus.title}</span>
+                <Link href={`/post/${post.previus.slug}`}>
+                  <a>Post anterior</a>
+                </Link>
+              </div>
+            )}
 
-            <div>
-              <span>{post.next.title}</span>
-              <Link href={`/post/${post.next.slug}`}>
-                <a>Próximo post</a>
-              </Link>
-            </div>
+            {post.next && (
+              <div>
+                <span>{post.next.title}</span>
+                <Link href={`/post/${post.next.slug}`}>
+                  <a>Próximo post</a>
+                </Link>
+              </div>
+            )}
           </div>
 
           <CommentsSection />

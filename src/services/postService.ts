@@ -7,12 +7,12 @@ export interface Post {
   last_publication_date: string | null;
   edited: boolean;
   previus: {
-    title: string;
-    slug: string;
+    title: string | null;
+    slug: string | null;
   };
   next: {
-    title: string;
-    slug: string;
+    title: string | null;
+    slug: string | null;
   };
   data: {
     title: string;
@@ -52,13 +52,11 @@ export async function getPostByUid(
   const prismic = getPrismicClient();
   const response = await prismic.getByUID('posts', slug, { ref });
 
-  console.log(response);
-
   const prevPost = await prismic.query(
     [Prismic.predicates.at('document.type', 'posts')],
     {
+      orderings: '[document.first_publication_date]',
       after: response.id,
-      orderings: '[my.post.date desc]',
       pageSize: 1,
     }
   );
@@ -66,8 +64,8 @@ export async function getPostByUid(
   const nextPost = await prismic.query(
     [Prismic.predicates.at('document.type', 'posts')],
     {
+      orderings: '[document.first_publication_date desc]', // the latest after the current post
       after: response.id,
-      orderings: '[my.post.date desc]',
       pageSize: 1,
     }
   );
@@ -75,14 +73,19 @@ export async function getPostByUid(
   const edited =
     response.first_publication_date !== response.last_publication_date;
 
-  const previus = {
-    title: prevPost?.results[0]?.data.title,
-    slug: prevPost?.results[0]?.uid,
-  };
-  const next = {
-    title: nextPost?.results[0]?.data.title,
-    slug: nextPost?.results[0]?.uid,
-  };
+  const previus = prevPost?.results[0]
+    ? {
+        title: prevPost?.results[0]?.data.title,
+        slug: prevPost?.results[0]?.uid,
+      }
+    : null;
+
+  const next = nextPost?.results[0]
+    ? {
+        title: nextPost?.results[0]?.data.title,
+        slug: nextPost?.results[0]?.uid,
+      }
+    : null;
 
   return { ...response, edited, previus, next };
 }
