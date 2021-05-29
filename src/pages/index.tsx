@@ -78,26 +78,25 @@ export default function Home({
                 <span>{post.data.author}</span>
               </div>
             </div>
-
-            {postsPagination.next_page && (
-              <button
-                className={styles.loadButton}
-                type="button"
-                onClick={loadMorePosts}
-              >
-                Carregar mais posts
-              </button>
-            )}
-
-            {preview && (
-              <aside className={styles.preview}>
-                <Link href="/api/exit-preview">
-                  <a>Sair do modo Preview</a>
-                </Link>
-              </aside>
-            )}
           </div>
         ))}
+        {nextPage && (
+          <button
+            className={styles.loadButton}
+            type="button"
+            onClick={loadMorePosts}
+          >
+            Carregar mais posts
+          </button>
+        )}
+
+        {preview && (
+          <aside className={styles.preview}>
+            <Link href="/api/exit-preview">
+              <a>Sair do modo Preview</a>
+            </Link>
+          </aside>
+        )}
       </div>
     </>
   );
