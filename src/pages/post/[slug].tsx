@@ -145,7 +145,7 @@ export default function PostPage({ post, preview }: PostProps) {
 export const getStaticPaths: GetStaticPaths = async () => {
   const response = await getPaths();
   return {
-    paths: response.paths,
+    paths: response.paths, // when we run build, next will build all the pages statically. If the left this as [], next will run the getStaticProps at least once in the server before building it statically
     fallback: true,
   };
 };
